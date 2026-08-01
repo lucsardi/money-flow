@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 
   const { inicio, fim } = inicioFimDoMes();
 
-  const [{ data: vendas }, { data: gastos } = { data: [] } as any] = await Promise.all([
+  const [vendasResult, gastosResult] = await Promise.all([
     supabase
       .from("vendas_diarias")
       .select("data, total_bruto, lucro_liquido")
@@ -40,17 +40,19 @@ export default async function DashboardPage() {
       .lte("data_vencimento", fim),
   ]);
 
-  const totalBruto = vendas?.reduce((s, v) => s + Number(v.total_bruto), 0) ?? 0;
-  const totalLucro = vendas?.reduce((s, v) => s + Number(v.lucro_liquido), 0) ?? 0;
-  const totalGastos = gastos?.reduce((s: number, g: any) => s + Number(g.valor), 0) ?? 0;
+  const vendas = vendasResult.data ?? [];
+  const gastos = gastosResult.data ?? [];
+
+  const totalBruto = vendas.reduce((s, v) => s + Number(v.total_bruto), 0);
+  const totalLucro = vendas.reduce((s, v) => s + Number(v.lucro_liquido), 0);
+  const totalGastos = gastos.reduce((s, g) => s + Number(g.valor), 0);
   const lucroLiquidoMes = totalLucro - totalGastos;
 
-  const dadosGrafico =
-    vendas?.map((v) => ({
-      dia: v.data.slice(8, 10),
-      bruto: Number(v.total_bruto),
-      lucro: Number(v.lucro_liquido),
-    })) ?? [];
+  const dadosGrafico = vendas.map((v) => ({
+    dia: v.data.slice(8, 10),
+    bruto: Number(v.total_bruto),
+    lucro: Number(v.lucro_liquido),
+  }));
 
   const cartoes = [
     { label: "Total de entradas (mês)", valor: totalBruto, cor: "text-ink" },
