@@ -24,7 +24,7 @@ export default async function DashboardPage() {
 
   const { inicio, fim } = inicioFimDoMes();
 
-  const [vendasResult, gastosResult] = await Promise.all([
+  const [vendasResult, gastosResult, boletosResult] = await Promise.all([
     supabase
       .from("vendas_diarias")
       .select("data, total_bruto, lucro_liquido")
@@ -38,14 +38,23 @@ export default async function DashboardPage() {
       .eq("empresa_id", empresa!.id)
       .gte("data_vencimento", inicio)
       .lte("data_vencimento", fim),
+    supabase
+      .from("boletos_fornecedores")
+      .select("valor")
+      .eq("empresa_id", empresa!.id)
+      .gte("data", inicio)
+      .lte("data", fim),
   ]);
 
   const vendas = vendasResult.data ?? [];
   const gastos = gastosResult.data ?? [];
+  const boletos = boletosResult.data ?? [];
 
   const totalBruto = vendas.reduce((s, v) => s + Number(v.total_bruto), 0);
   const totalLucro = vendas.reduce((s, v) => s + Number(v.lucro_liquido), 0);
-  const totalGastos = gastos.reduce((s, g) => s + Number(g.valor), 0);
+  const totalGastos =
+    gastos.reduce((s, g) => s + Number(g.valor), 0) +
+    boletos.reduce((s, b) => s + Number(b.valor), 0);
   const lucroLiquidoMes = totalLucro - totalGastos;
 
   const dadosGrafico = vendas.map((v) => ({

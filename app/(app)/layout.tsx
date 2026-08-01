@@ -30,12 +30,21 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <p className="font-mono text-[11px] tracking-widest text-emerald uppercase">
               {empresa?.nome ?? "Minha Loja"}
             </p>
-            <nav className="flex gap-4 mt-1">
+            <nav className="flex gap-4 mt-1 flex-wrap">
               <Link href="/dashboard" className="font-display font-medium text-sm hover:text-emerald">
                 Resumo
               </Link>
               <Link href="/vendas" className="font-display font-medium text-sm hover:text-emerald">
                 Vendas Diárias
+              </Link>
+              <Link href="/gastos" className="font-display font-medium text-sm hover:text-emerald">
+                Gastos
+              </Link>
+              <Link href="/boletos" className="font-display font-medium text-sm hover:text-emerald">
+                Boletos
+              </Link>
+              <Link href="/fornecedores" className="font-display font-medium text-sm hover:text-emerald">
+                Fornecedores
               </Link>
             </nav>
           </div>
