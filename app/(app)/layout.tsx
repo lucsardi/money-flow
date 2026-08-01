@@ -46,6 +46,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <Link href="/fornecedores" className="font-display font-medium text-sm hover:text-emerald">
                 Fornecedores
               </Link>
+              <Link href="/compras" className="font-display font-medium text-sm hover:text-emerald">
+                Compras (CNPJ)
+              </Link>
+              <Link href="/taxas" className="font-display font-medium text-sm hover:text-emerald">
+                Taxas de Cartão
+              </Link>
             </nav>
           </div>
           <form action={signOut}>
